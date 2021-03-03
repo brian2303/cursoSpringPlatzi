@@ -7,14 +7,20 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.sileg.app.domain.service.ProjectUserDetailsService;
+import com.sileg.app.webcontroller.security.filter.JwtFilterRequest;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private ProjectUserDetailsService projectUserDetailsService;
+	
+	@Autowired
+	private JwtFilterRequest jwtFilterRequest;
 	
 	/*
 	 * Asignar el usuario que creamos en projectUserDetailsService
@@ -27,7 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests().antMatchers("/**/authenticate").permitAll()
-			.anyRequest().authenticated();
+			.anyRequest().authenticated().and().sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtFilterRequest,UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override

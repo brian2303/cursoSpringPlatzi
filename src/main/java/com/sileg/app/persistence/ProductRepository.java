@@ -13,6 +13,7 @@ import com.sileg.app.persistence.crud.ProductCrudRepository;
 import com.sileg.app.persistence.entity.Product;
 import com.sileg.app.persistence.mapper.ProductMapper;
 
+
 @Repository
 public class ProductRepository implements DomainProductRepository {
 	
